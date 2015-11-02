@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://blog.rdtr.net/theme/css/style.min.css">
+  <link rel="stylesheet" type="text/css" href="http://blog.rdtr.net/theme/css/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://blog.rdtr.net/theme/css/font-awesome.min.css">
+  <link href="http://blog.rdtr.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Fix Typos Atom">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+<meta name="author" content="rdtr" />
+<meta name="description" content="Problem Find maximum element in binary tree. Solution This is a fairy simple and straigt-forward problem. Because we eventually have to check all elements in the binary tree (Note: the tree is not a binary search tree) So we can traverse all elements by BFS, compare value everytime we visit ..." />
+<meta name="keywords" content="algorithm, trees">
+<meta property="og:site_name" content="Fix Typos"/>
+<meta property="og:title" content="Exploring Alrorithm: Finding the maximum element in binary tree"/>
+<meta property="og:description" content="Problem Find maximum element in binary tree. Solution This is a fairy simple and straigt-forward problem. Because we eventually have to check all elements in the binary tree (Note: the tree is not a binary search tree) So we can traverse all elements by BFS, compare value everytime we visit ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://blog.rdtr.net/posts/2015/11/01/algorithms_trees_find_maximum_element_in_binary_tree.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2015-11-01 00:20:00+00:00"/>
+<meta property="article:modified_time" content="2015-11-01 00:20:00+00:00"/>
+<meta property="article:author" content="http://blog.rdtr.net/author/rdtr.html">
+<meta property="article:section" content="Algorithm"/>
+<meta property="article:tag" content="algorithm"/>
+<meta property="article:tag" content="trees"/>
+<meta property="og:image" content="">  <title>Fix Typos &ndash; Exploring Alrorithm: Finding the maximum element in binary tree</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://blog.rdtr.net">
+        <img src="http://blog.rdtr.net/theme/img/profile.png" alt="" title="">
+      </a>
+      <h1><a href="http://blog.rdtr.net"></a></h1>
+      <p></p>
+      <nav>
+        <ul class="list">
+
+          Software Engineer in Bay Area
+
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-You can add links in your config file" href="#" target="_blank"><i class="fa fa-You can add links in your config file"></i></a></li>
+        <li><a class="sc-Another social link" href="#" target="_blank"><i class="fa fa-Another social link"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="algorithms_trees_find_maximum_element_in_binary_tree">Exploring Alrorithm: Finding the maximum element in binary tree</h1>
+    <p>Posted on Sun, 01 Nov 2015 in <a href="http://blog.rdtr.net/category/algorithm.html">Algorithm</a></p>
+  </header>
+  <div>
+    <h4>Problem</h4>
+<div class="highlight"><pre>Find maximum element in binary tree.
+</pre></div>
+
+
+<h4>Solution</h4>
+<p>This is a fairy simple and straigt-forward problem.<br />
+Because we eventually have to check all elements in the binary tree (Note: the tree is not a <strong>binary search</strong> tree)</p>
+<p>So we can traverse all elements by BFS, compare value everytime we visit a node while storing the max value at that time, then finally return it.</p>
+<p>The code would be like:</p>
+<div class="gist">
+    <script src='https://gist.github.com/5a079f9ffb4163763ca1.js?file=algorithms_trees_find_maximum_element_in_binary_tree_01.py'></script>
+    <noscript>
+        <pre><code>'''
+The definition of tree node is like:
+class Node():
+    def __init__(self, value):
+        self.value, self.left, self.right = value, None, None
+    
+    def setValue(self, value):
+        self.value = value
+    
+    def setLeft(self, left):
+        self.left = left
+    
+    def setRight(self, right):
+        self.right = right
+'''
+
+def find_max(root):
+    if not root:
+        return None
+    queue = [root]
+    max_value = root.value
+    
+    while queue:
+        new_queue = []
+        for node in queue:
+            if node.left:
+                max_value = max(max_value, node.left.value)
+                new_queue.append(node.left)
+            if node.right:
+                max_value = max(max_value, node.right.value)
+                new_queue.append(node.right)
+        queue = new_queue
+    return max_value</code></pre>
+    </noscript>
+</div>
+<p>The time complexicity is O(N) while N is a number of nodes of the tree, and the space complexicity is also O(N) (Imagine a case that root has all nodes as children). </p>
+<p>Or we can use recurrsive function that searches the biggest number among the node itself, its left child, and right child from a given node.</p>
+<div class="gist">
+    <script src='https://gist.github.com/4460ee20c03761dafd1b.js?file=algorithms_trees_find_maximum_element_in_binary_tree_02.py'></script>
+    <noscript>
+        <pre><code>def find_max_value_from_parent_and_children(node):
+    if not node:
+        return None
+
+    if node.left and node.right:
+        return max(node.value, max(find_max_value_from_parent_and_children(node.left), \
+                                   find_max_value_from_parent_and_children(node.right)))
+    elif node.left:
+        return max(node.value, find_max_value_from_parent_and_children(node.left))
+    elif node.right:
+        return max(node.value, find_max_value_from_parent_and_children(node.right))
+    else:
+        node.value
+    
+def find_max(root):
+    return find_max_value_from_parent_and_children(root)
+    </code></pre>
+    </noscript>
+</div>
+<p>The time complexicity and the space complexicity are both O(N) in this case too.</p>
+<p>Java version of the code above is:</p>
+<div class="gist">
+    <script src='https://gist.github.com/cc7affcd8b783e06fe45.js?file=algorithms_trees_find_maximum_element_in_binary_tree_01.java'></script>
+    <noscript>
+        <pre><code>/* The definition of a node of tree is like:
+public class Node {
+    public int value;
+    public Node left;
+    public Node right;
+    
+    public Node(int value) {
+        this.value = value;
+        left       = null;
+        right      = null;
+    }
+    
+    public setValue(int value) {
+        this.value = value;
+    }
+    
+    public setLeft(Node left) {
+        this.left = left;
+    }
+    
+    public setRight(Node right) {
+        this.right = right;
+    }
+}
+*/
+
+public class Solution {
+     public static int findMax(Node root){
+        if (root == null) return Integer.MIN_VALUE;
+        
+        int maxValue = root.value;
+        List<Node> lst = new ArrayList<Node>(root);
+        while (!lst.isEmpty()) {
+            List<Node> newLst = new ArrayList<Node>();
+            
+            if (lst.left != null) {
+                newLst.add(lst.left);
+                if (lst.left > maxValue) maxValue = lst.left;
+            if (lst.right != null) {
+                newLst.add(lst.right);
+                if (lst.right > maxValue) maxValue = lst.right;
+            }
+            lst = newLst;
+        }
+        return maxValue;
+     }
+}</code></pre>
+    </noscript>
+</div>
+<p>Using recurrsive function:</p>
+<div class="gist">
+    <script src='https://gist.github.com/0d705e57a6a885d1241e.js?file=algorithms_trees_find_maximum_element_in_binary_tree_02.java'></script>
+    <noscript>
+        <pre><code>public class Solution {
+    public static int findMaxFromParentAndChildren(Node node) {
+        if (node == null) return Integer.MIN_VALUE;
+        
+        if (node.left != null && node.right != null) {
+            return Math.max(node.value, Math.max(Solution.findMaxFromParentAndChildren(left),
+                                                 Solution.findMaxFromParentAndChildren(right)));
+        } else if (node.left != null) {
+            return Solution.findMaxFromParentAndChildren(left);
+        } else if (node.right != null) {
+            return Solution.findMaxFromParentAndChildren(right);
+        } else {
+            return node.value;
+        }
+    }
+    
+    public static int findMax(Node root){
+        return Solution.findMaxFromParentAndChildren(root);    
+    }
+}</code></pre>
+    </noscript>
+</div>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://blog.rdtr.net/tag/algorithm.html">algorithm</a>
+      <a href="http://blog.rdtr.net/tag/trees.html">trees</a>
+    </p>
+  </div>
+</article>
+
+    <footer>
+      <p>&copy; @_rdtr </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Exploring Alrorithm: Finding the maximum element in binary tree",
+  "headline": "Exploring Alrorithm: Finding the maximum element in binary tree",
+  "datePublished": "2015-11-01 00:20:00+00:00",
+  "dateModified": "2015-11-01 00:20:00+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "rdtr",
+    "url": "http://blog.rdtr.net/author/rdtr.html"
+  },
+  "image": "{{ SITEURL }}/{{ THEME_STATIC_DIR }}/img/profile.png",
+  "url": "http://blog.rdtr.net/posts/2015/11/01/algorithms_trees_find_maximum_element_in_binary_tree.html",
+  "description": "Problem Find maximum element in binary tree. Solution This is a fairy simple and straigt-forward problem. Because we eventually have to check all elements in the binary tree (Note: the tree is not a binary search tree) So we can traverse all elements by BFS, compare value everytime we visit ..."
+}
+</script></body>
+</html>

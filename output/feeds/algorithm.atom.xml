@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Fix Typos</title><link href="http://blog.rdtr.net/" rel="alternate"></link><link href="http://blog.rdtr.net/feeds/algorithm.atom.xml" rel="self"></link><id>http://blog.rdtr.net/</id><updated>2015-11-01T00:20:00+00:00</updated><entry><title>Exploring Alrorithm: Finding the maximum element in binary tree</title><link href="http://blog.rdtr.net/posts/2015/11/01/algorithms_trees_find_maximum_element_in_binary_tree.html" rel="alternate"></link><updated>2015-11-01T00:20:00+00:00</updated><author><name>rdtr</name></author><id>tag:blog.rdtr.net,2015-11-01:posts/2015/11/01/algorithms_trees_find_maximum_element_in_binary_tree.html</id><summary type="html">&lt;h4&gt;Problem&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Find maximum element in binary tree.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Solution&lt;/h4&gt;
+&lt;p&gt;This is a fairy simple and straigt-forward problem.&lt;br /&gt;
+Because we eventually have to check all elements in the binary tree (Note: the tree is not a &lt;strong&gt;binary search&lt;/strong&gt; tree)&lt;/p&gt;
+&lt;p&gt;So we can traverse all elements by BFS, compare value everytime we visit a node while storing the max value at that time, then finally return it.&lt;/p&gt;
+&lt;p&gt;The code would be like:&lt;/p&gt;
+&lt;div class="gist"&gt;
+    &lt;script src='https://gist.github.com/5a079f9ffb4163763ca1.js?file=algorithms_trees_find_maximum_element_in_binary_tree_01.py'&gt;&lt;/script&gt;
+    &lt;noscript&gt;
+        &lt;pre&gt;&lt;code&gt;'''
+The definition of tree node is like:
+class Node():
+    def __init__(self, value):
+        self.value, self.left, self.right = value, None, None
+    
+    def setValue(self, value):
+        self.value = value
+    
+    def setLeft(self, left):
+        self.left = left
+    
+    def setRight(self, right):
+        self.right = right
+'''
+
+def find_max(root):
+    if not root:
+        return None
+    queue = [root]
+    max_value = root.value
+    
+    while queue:
+        new_queue = []
+        for node in queue:
+            if node.left:
+                max_value = max(max_value, node.left.value)
+                new_queue.append(node.left)
+            if node.right:
+                max_value = max(max_value, node.right.value)
+                new_queue.append(node.right)
+        queue = new_queue
+    return max_value&lt;/code&gt;&lt;/pre&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+&lt;p&gt;The time complexicity is O(N) while N is a number of nodes of the tree, and the space complexicity is also O(N) (Imagine a case that root has all nodes as children). &lt;/p&gt;
+&lt;p&gt;Or we can use recurrsive function that searches the biggest number among the node itself, its left child, and right child from a given node.&lt;/p&gt;
+&lt;div class="gist"&gt;
+    &lt;script src='https://gist.github.com/4460ee20c03761dafd1b.js?file=algorithms_trees_find_maximum_element_in_binary_tree_02.py'&gt;&lt;/script&gt;
+    &lt;noscript&gt;
+        &lt;pre&gt;&lt;code&gt;def find_max_value_from_parent_and_children(node):
+    if not node:
+        return None
+
+    if node.left and node.right:
+        return max(node.value, max(find_max_value_from_parent_and_children(node.left), \
+                                   find_max_value_from_parent_and_children(node.right)))
+    elif node.left:
+        return max(node.value, find_max_value_from_parent_and_children(node.left))
+    elif node.right:
+        return max(node.value, find_max_value_from_parent_and_children(node.right))
+    else:
+        node.value
+    
+def find_max(root):
+    return find_max_value_from_parent_and_children(root)
+    &lt;/code&gt;&lt;/pre&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+&lt;p&gt;The time complexicity and the space complexicity are both O(N) in this case too.&lt;/p&gt;
+&lt;p&gt;Java version of the code above is:&lt;/p&gt;
+&lt;div class="gist"&gt;
+    &lt;script src='https://gist.github.com/cc7affcd8b783e06fe45.js?file=algorithms_trees_find_maximum_element_in_binary_tree_01.java'&gt;&lt;/script&gt;
+    &lt;noscript&gt;
+        &lt;pre&gt;&lt;code&gt;/* The definition of a node of tree is like:
+public class Node {
+    public int value;
+    public Node left;
+    public Node right;
+    
+    public Node(int value) {
+        this.value = value;
+        left       = null;
+        right      = null;
+    }
+    
+    public setValue(int value) {
+        this.value = value;
+    }
+    
+    public setLeft(Node left) {
+        this.left = left;
+    }
+    
+    public setRight(Node right) {
+        this.right = right;
+    }
+}
+*/
+
+public class Solution {
+     public static int findMax(Node root){
+        if (root == null) return Integer.MIN_VALUE;
+        
+        int maxValue = root.value;
+        List&lt;Node&gt; lst = new ArrayList&lt;Node&gt;(root);
+        while (!lst.isEmpty()) {
+            List&lt;Node&gt; newLst = new ArrayList&lt;Node&gt;();
+            
+            if (lst.left != null) {
+                newLst.add(lst.left);
+                if (lst.left &gt; maxValue) maxValue = lst.left;
+            if (lst.right != null) {
+                newLst.add(lst.right);
+                if (lst.right &gt; maxValue) maxValue = lst.right;
+            }
+            lst = newLst;
+        }
+        return maxValue;
+     }
+}&lt;/code&gt;&lt;/pre&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+&lt;p&gt;Using recurrsive function:&lt;/p&gt;
+&lt;div class="gist"&gt;
+    &lt;script src='https://gist.github.com/0d705e57a6a885d1241e.js?file=algorithms_trees_find_maximum_element_in_binary_tree_02.java'&gt;&lt;/script&gt;
+    &lt;noscript&gt;
+        &lt;pre&gt;&lt;code&gt;public class Solution {
+    public static int findMaxFromParentAndChildren(Node node) {
+        if (node == null) return Integer.MIN_VALUE;
+        
+        if (node.left != null &amp;&amp; node.right != null) {
+            return Math.max(node.value, Math.max(Solution.findMaxFromParentAndChildren(left),
+                                                 Solution.findMaxFromParentAndChildren(right)));
+        } else if (node.left != null) {
+            return Solution.findMaxFromParentAndChildren(left);
+        } else if (node.right != null) {
+            return Solution.findMaxFromParentAndChildren(right);
+        } else {
+            return node.value;
+        }
+    }
+    
+    public static int findMax(Node root){
+        return Solution.findMaxFromParentAndChildren(root);    
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;</summary><category term="algorithm"></category><category term="trees"></category></entry></feed>
