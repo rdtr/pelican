@@ -23,10 +23,11 @@ Just begin from a head of each linked list and sum up each element, then carry o
 
 Note that when the last sum amount is greater than 9, we have to perform one more carry-over `1` to the tail of the result list.
 
-<code data-gist-id="071f98653affe6a5196c"></code>
+[gist:id=071f98653affe6a5196c,file=algorithm_linked_list_add_two_numbers.py]
 
 Java code:
-<code data-gist-id="de121960e6c181dc3337"></code>
+
+[gist:id=de121960e6c181dc3337,file=algorithm_linked_list_add_two_numbers.java]
 
 Time complexicity: `O(N)`, space complexicity: `O(N)` while N is a length of the longer list between two given.  
 To understand easily I store the result in a new linked-list, but actaully we don't need to use a new one, instead just store the result to `l1` or `l2` (That won't affect the result). Then, there is no extra space needed. 
