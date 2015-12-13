@@ -53,8 +53,10 @@ Note: **S[i] should equal to S[i+1] in this case.**
 To iterate each element, we should take `O(N)` time comlexity. And each expansion trial takes also `O(N)` at most, so as a whole, time complexicy is `O(N^2)`.  
 (To make it little more efficient, I set a break condition at the first line in the iteration loop and prevent keep searching a palindrome if the possible longest palindrome with a center S[i] is never longer than the current max palindrome).
 
-The time complexity is `O(1)` since we don't use extra space.
+The space complexity is `O(1)` since we don't use extra space.
 
 A code in Java is below:
 
 [gist:id=51c2c1e80d53932ee7a0,file=algorithm_string_longest_palindromic_substring.java]
+
+On this java code, the space complexity is `O(N)` because I use String to hold the current maximum palindrome during an iteration.
